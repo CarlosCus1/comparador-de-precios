@@ -91,12 +91,12 @@ export function useChartAccessibility(config: ChartA11yConfig) {
 
   const accessibleTable = useMemo(() => {
     return config.data.map((row, rowIndex) => {
-      if (typeof row !== 'object') {
+      if (typeof row !== 'object' || row === null) {
         return { id: `row-${rowIndex}`, values: [String(row)] };
       }
       return {
         id: `row-${rowIndex}`,
-        values: Object.entries(row).map(([key, value]) => `${key}: ${String(value)}`)
+        values: Object.entries(row as Record<string, unknown>).map(([key, value]) => `${key}: ${String(value)}`)
       };
     });
   }, [config.data]);

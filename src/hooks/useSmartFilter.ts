@@ -1,11 +1,20 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useCallback, useMemo, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useAppStore } from '../store/useAppStore';
-import { 
-  UserRole,
-  ProductData 
-} from '../types';
+
+/**
+ * Tipos locales para el hook
+ */
+export type UserRole = 'Form' | 'Usuario' | 'DashboardData';
+
+export interface ProductData {
+  nombre: string;
+  marca: string;
+  categoria: string;
+  precio: number;
+  disponible?: boolean;
+  sku?: string;
+}
 
 /**
  * Esquema de validación para filtros
@@ -51,6 +60,9 @@ export const roleFilterConfig: Record<UserRole, {
   },
 };
 
+// Storage key for persisted filters
+const FILTERS_STORAGE_KEY = 'smart-filters-persisted';
+
 /**
  * Hook para filtros inteligentes con persistencia
  */
@@ -59,7 +71,34 @@ export const useSmartFilter = (
   role: UserRole = 'Usuario'
 ) => {
   const config = roleFilterConfig[role];
-  const store = useAppStore();
+  
+  // Cargar filtros persistidos del localStorage
+  const getPersistedFilters = (): Partial<FilterFormData> => {
+    try {
+      const stored = localStorage.getItem(FILTERS_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  };
+  
+  // Guardar filtros en localStorage
+  const persistFilters = (filters: Partial<FilterFormData>) => {
+    try {
+      localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(filters));
+    } catch {
+      // Ignore storage errors
+    }
+  };
+  
+  // Limpiar filtros persistidos
+  const clearPersistedFilters = () => {
+    try {
+      localStorage.removeItem(FILTERS_STORAGE_KEY);
+    } catch {
+      // Ignore storage errors
+    }
+  };
   
   // Inicializar formulario con valores persistidos o predeterminados
   const {
@@ -73,7 +112,7 @@ export const useSmartFilter = (
   } = useForm<FilterFormData>({
     defaultValues: {
       ...config.filtrosPredeterminados,
-      ...(store.filtrosPersistidos || {}),
+      ...getPersistedFilters(),
     },
   });
 
@@ -81,13 +120,13 @@ export const useSmartFilter = (
   const valoresWatch = watch();
   
   useEffect(() => {
-    if (isDirty && store.guardarFiltros) {
+    if (isDirty) {
       const timeout = setTimeout(() => {
-        store.guardarFiltros(valoresWatch);
+        persistFilters(valoresWatch);
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [valoresWatch, isDirty, store]);
+  }, [valoresWatch, isDirty]);
 
   // Aplicar filtros a los datos
   const datosFiltrados = useMemo(() => {
@@ -159,7 +198,9 @@ export const useSmartFilter = (
   const estadisticas = useMemo(() => ({
     total: datosOriginales.length,
     filtrados: datosFiltrados.length,
-    porcentaje: Math.round((datosFiltrados.length / datosOriginales.length) * 100),
+    porcentaje: datosOriginales.length > 0 
+      ? Math.round((datosFiltrados.length / datosOriginales.length) * 100)
+      : 0,
   }), [datosOriginales.length, datosFiltrados.length]);
 
   // Marcas disponibles para selector
@@ -198,10 +239,8 @@ export const useSmartFilter = (
   // Resetear filtros
   const resetearFiltros = useCallback(() => {
     reset(config.filtrosPredeterminados);
-    if (store.limpiarFiltros) {
-      store.limpiarFiltros();
-    }
-  }, [reset, config.filtrosPredeterminados, store]);
+    clearPersistedFilters();
+  }, [reset, config.filtrosPredeterminados]);
 
   return {
     control,

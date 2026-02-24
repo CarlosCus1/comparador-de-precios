@@ -1,5 +1,4 @@
-import React from 'react';
-import { useAppStore } from '../../store/useAppStore';
+import React, { useState } from 'react';
 
 interface VisualizationManagerProps {
   children: React.ReactNode;
@@ -8,6 +7,18 @@ interface VisualizationManagerProps {
   description: string;
   className?: string;
 }
+
+// Estado local para visibilidad de gráficos
+const chartVisibilityState: Record<string, boolean> = {
+  'dashboard-kpis': true,
+  'price-distribution': true,
+  'price-trends': true,
+  'drill-down': true,
+  'hybrid-visualization': true,
+  'price-averages': true,
+  'line-counters': true,
+  'real-time-streaming': false
+};
 
 /**
  * Componente que gestiona la visibilidad de visualizaciones individuales
@@ -20,10 +31,8 @@ export const VisualizationManager: React.FC<VisualizationManagerProps> = ({
   description,
   className = ''
 }) => {
-  const visibleCharts = useAppStore((state) => state.visibleCharts || {});
-  
   // Verificar si este gráfico está habilitado
-  const isVisible = visibleCharts[chartId] !== false;
+  const isVisible = chartVisibilityState[chartId] !== false;
 
   if (!isVisible) {
     return (
@@ -51,18 +60,15 @@ export const VisualizationManager: React.FC<VisualizationManagerProps> = ({
  * Hook para gestionar la visibilidad de gráficos
  */
 export const useVisualizationVisibility = () => {
-  const visibleCharts = useAppStore((state) => state.visibleCharts || {});
-  const setVisibleCharts = useAppStore((state) => state.setVisibleCharts);
+  const [visibleCharts, setVisibleChartsState] = useState(chartVisibilityState);
 
   const setChartVisibility = (chartId: string, visible: boolean) => {
-    setVisibleCharts({
-      ...visibleCharts,
-      [chartId]: visible
-    });
+    chartVisibilityState[chartId] = visible;
+    setVisibleChartsState({ ...chartVisibilityState });
   };
 
   const resetToDefaults = () => {
-    setVisibleCharts({
+    Object.assign(chartVisibilityState, {
       'dashboard-kpis': true,
       'price-distribution': true,
       'price-trends': true,
@@ -72,6 +78,7 @@ export const useVisualizationVisibility = () => {
       'line-counters': true,
       'real-time-streaming': false
     });
+    setVisibleChartsState({ ...chartVisibilityState });
   };
 
   return {

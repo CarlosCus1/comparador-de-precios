@@ -1,6 +1,12 @@
 # CIPSA Análisis de Precios - Sistema de Comparación Competitiva
 
-Una aplicación web moderna y sofisticada para el análisis comparativo de precios entre múltiples competidores y cálculo de márgenes comerciales. Diseñada con un sistema de diseño premium, interfaz intuitiva y funcionalidades avanzadas para la toma de decisiones estratégicas en pricing.
+Una aplicación web moderna para el análisis comparativo de precios entre múltiples competidores y cálculo de márgenes comerciales.
+
+## 🌐 Demo en Vivo
+
+**GitHub Pages**: https://carloscus1.github.io/comparador-de-precios/
+
+> **Nota**: La versión de GitHub Pages es una **demo estática** que funciona sin backend. Para funcionalidad completa con backend, ver instrucciones de desarrollo local.
 
 ## ✨ Características Principales
 
@@ -10,13 +16,13 @@ Una aplicación web moderna y sofisticada para el análisis comparativo de preci
 - Protección de rutas y datos sensibles
 
 ### 📊 Análisis Comparativo Avanzado
-- **Catálogo Inteligente**: Carga automática desde backend con búsqueda en tiempo real
+- **Catálogo Inteligente**: Carga automática con búsqueda en tiempo real
 - **Comparación Interactiva**: Tabla editable con cálculos automáticos de porcentajes y rankings
 - **Visualizaciones Dinámicas**: Gráficos de barras, pastel y tendencias con colores sincronizados
 - **Tarjetas Comparativas**: Layout horizontal responsive con métricas clave
 
 ### 🎨 Sistema de Diseño Premium
-- **Paleta Corporativa**: Azul profundo como color principal con gradientes elegantes
+- **Paleta Corporativa**: Verde esmeralda como color principal con gradientes elegantes
 - **Colores Sincronizados**: Sistema unificado para marcas, gráficos y componentes
 - **Interfaz Moderna**: Diseño glassmorphism con efectos de sombra y animaciones sutiles
 - **Accesibilidad WCAG AA**: Contraste optimizado y navegación por teclado
@@ -38,41 +44,45 @@ Una aplicación web moderna y sofisticada para el análisis comparativo de preci
 - **Zustand** - Gestión de estado ligera con persistencia
 - **React Hook Form** - Formularios con validación optimizada
 
-### Backend
+### Backend (Opcional - Solo para desarrollo local)
 - **Python Flask** - API REST ligera y escalable
 - **Pandas** - Procesamiento de datos y generación de reportes
 - **OpenPyXL** - Manipulación de archivos Excel
 
-### DevOps & Calidad
-- **ESLint** + **Prettier** - Linting y formateo de código
-- **TypeScript** - Verificación de tipos estática
-- **Vitest** - Testing unitario y de integración
-
 ## 🚀 Instalación y Configuración
 
-### Prerrequisitos
+### Versión Estática (GitHub Pages)
+Simplemente visita la URL de demo: https://carloscus1.github.io/comparador-de-precios/
+
+### Desarrollo Local Completo
+
+#### Prerrequisitos
 - Node.js 18+
-- Python 3.8+
+- Python 3.8+ (solo si necesitas backend)
 - npm o yarn
 
-### Instalación Frontend
+#### Instalación Frontend
 ```bash
 # Clonar repositorio
-git clone <repository-url>
-cd comparador_de_precios
+git clone https://github.com/CarlosCus1/comparador-de-precios.git
+cd comparador-de-precios
 
 # Instalar dependencias
 npm install
 
-# Configurar variables de entorno
-cp .env.example .env
-# Editar VITE_BACKEND_URL según corresponda
+# Ejecutar en modo desarrollo (sin backend)
+npm run dev
 ```
 
-### Instalación Backend
+#### Instalación Backend (Opcional)
 ```bash
 # Navegar al directorio backend
 cd backend
+
+# Crear entorno virtual
+python -m venv venv
+.\venv\Scripts\activate  # Windows
+# source venv/bin/activate  # Linux/Mac
 
 # Instalar dependencias
 pip install -r requirements.txt
@@ -81,9 +91,9 @@ pip install -r requirements.txt
 python app.py
 ```
 
-### Ejecución en Desarrollo
+#### Ejecución Completa con Backend
 ```bash
-# Terminal 1: Backend
+# Terminal 1: Backend (opcional)
 cd backend && python app.py
 
 # Terminal 2: Frontend
@@ -101,8 +111,8 @@ npm run dev
 ## 🎨 Sistema de Diseño Detallado
 
 ### Paleta de Colores
-- **Primario**: Azul profundo (#2563EB) con variantes 50-900
-- **Secundario**: Verde esmeralda (#059669)
+- **Primario**: Verde esmeralda (#059669)
+- **Secundario**: Azul profundo (#2563EB)
 - **Accent**: Púrpura amatista (#7C3AED)
 - **Marcas**: Colores únicos asignados dinámicamente por nombre
 - **Estados**: Success (#10B981), Warning (#F59E0B), Danger (#DC2626)
@@ -117,11 +127,6 @@ npm run dev
 - **Desktop**: Layout horizontal con sidebar y contenido principal
 - **Tablet/Móvil**: Diseño apilado con navegación colapsable
 - **Tarjetas Comparativas**: Horizontal en PC, vertical en móvil
-
-### Animaciones y Microinteracciones
-- **Transiciones**: Suaves con duración optimizada (200-300ms)
-- **Hover Effects**: Elevación y cambios de color sutiles
-- **Loading States**: Indicadores visuales durante operaciones asíncronas
 
 ## 🏗️ Arquitectura
 
@@ -139,11 +144,19 @@ src/
 └── types/              # Definiciones TypeScript
 ```
 
-### Principios de Diseño
-- **Componentización**: Componentes modulares y reutilizables
-- **Separación de Concerns**: Lógica, presentación y datos separados
-- **Performance**: Lazy loading, memoización y optimizaciones
-- **Accesibilidad**: Cumplimiento WCAG AA con navegación por teclado
+## 📦 Despliegue
+
+### GitHub Pages (Automático)
+El proyecto se despliega automáticamente en GitHub Pages mediante GitHub Actions cuando se hace push a la rama `main`.
+
+- **URL**: https://carloscus1.github.io/comparador-de-precios/
+- **Workflow**: `.github/workflows/deploy.yml`
+
+### Build Manual
+```bash
+npm run build
+# Los archivos se generan en la carpeta 'dist'
+```
 
 ## 🤝 Contribución
 
@@ -152,12 +165,6 @@ src/
 3. Commit tus cambios (`git commit -m 'Agrega nueva funcionalidad'`)
 4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
 5. Abre un Pull Request
-
-### Guías de Desarrollo
-- Usa TypeScript para todo el código nuevo
-- Sigue las convenciones de nomenclatura existentes
-- Agrega tests para nuevas funcionalidades
-- Actualiza la documentación según corresponda
 
 ## 📄 Licencia
 

@@ -196,8 +196,8 @@ const PricePieChart: React.FC<PricePieChartProps> = ({
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ name, percent }: { name: string; percent?: number }) => 
-                `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`
+              label={({ name, percent }: any) => 
+                `${name || ''}: ${((percent ?? 0) * 100).toFixed(0)}%`
               }
               outerRadius={80}
               dataKey="value"
@@ -205,7 +205,6 @@ const PricePieChart: React.FC<PricePieChartProps> = ({
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               role="graphics-symbol"
-              aria-label={(entry: any) => `${entry.name}: S/ ${entry.value.toFixed(2)}, ${(entry.percent * 100).toFixed(2)}%`}
               style={{ cursor: onSegmentClick ? 'pointer' : 'default' }}
             >
               {chartData.map((entry, index) => (

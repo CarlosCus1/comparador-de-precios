@@ -136,7 +136,7 @@ export const HybridChart: React.FC<HybridChartProps> = ({
 
       {/* Descripción accesible */}
       <div className="sr-only" aria-live="polite">
-        {accessibleDescription}
+        {String(accessibleDescription)}
       </div>
 
       {/* Contenedor del gráfico */}
