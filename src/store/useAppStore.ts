@@ -130,7 +130,8 @@ export const useAppStore = create<State & Actions>()(
         try {
           // Cargar catálogo desde el frontend (public/data/productos.json)
           // El backend se usa solo para cálculos complejos y exportaciones
-          const response = await fetch('/data/productos.json');
+          const baseUrl = import.meta.env.BASE_URL;
+          const response = await fetch(`${baseUrl}data/productos.json`);
           if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`No se pudo cargar el catálogo de productos. Estado: ${response.status}, Mensaje: ${errorText}`);
