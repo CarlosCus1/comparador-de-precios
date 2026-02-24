@@ -57,13 +57,11 @@ interface CustomTooltipProps {
       percent?: number;
     };
   }>;
-  competitors?: string[];
 }
 
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ 
   active, 
-  payload, 
-  competitors 
+  payload
 }) => {
   if (active && payload && payload.length) {
     const data = payload[0];
@@ -125,13 +123,15 @@ const PricePieChart: React.FC<PricePieChartProps> = ({
   );
 
   // Manejar click en segmento
-  const handleSegmentClick = useCallback((entry: any) => {
+  type SegmentEntry = { name: string; value: number; percent?: number };
+
+  const handleSegmentClick = useCallback((entry: SegmentEntry) => {
     setActiveSegment(entry.name);
     onSegmentClick?.({ name: entry.name, value: entry.value });
   }, [onSegmentClick]);
 
   // Manejar hover
-  const handleMouseEnter = useCallback((entry: any) => {
+  const handleMouseEnter = useCallback((entry: SegmentEntry) => {
     setHoveredSegment(entry.name);
     onHover?.({ name: entry.name, value: entry.value });
   }, [onHover]);
@@ -196,7 +196,7 @@ const PricePieChart: React.FC<PricePieChartProps> = ({
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ name, percent }: any) => 
+              label={({ name, percent }: { name?: string; percent?: number }) => 
                 `${name || ''}: ${((percent ?? 0) * 100).toFixed(0)}%`
               }
               outerRadius={80}

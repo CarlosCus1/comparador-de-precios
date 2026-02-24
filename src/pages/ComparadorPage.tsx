@@ -14,19 +14,18 @@ import { calculateDataWithPercentages } from '../utils/comparisonUtils';
 import { DataTable, type IColumn } from '../components/DataTable';
 import { PriceInput } from '../components/comparador/PriceInput';
 import { MiniPriceChart } from '../components/comparador/MiniPriceChart';
-import { CompactPriceChart } from '../components/comparador/CompactPriceChart';
 import PricePieChart from '../components/comparador/PricePieChart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
-import { safeExportToCanvas } from '../utils/exportUtils';
 import { PreciosExport } from '../api/schemas';
 import { ExportOptionsModal, EXPORT_COLUMN_GROUPS } from '../components/ExportOptionsModal';
 import { exportApi } from '../utils/api';
 import { useAuth } from '../contexts/auth';
 import { useToast } from '../contexts/ToastContext';
 import { ComparisonBar } from '../components/comparador/ComparisonBar';
-import { ProductAnalysisCard } from '../components/comparador/ProductAnalysisCard';
-import { ProductAnalysisCardCompact } from '../components/comparador/ProductAnalysisCardCompact';
-import { ProductAnalysisCardFinal } from '../components/comparador/ProductAnalysisCardFinal';
+// Product analysis cards are available but not used in this view (kept commented for possible future use)
+// import { ProductAnalysisCard } from '../components/comparador/ProductAnalysisCard';
+// import { ProductAnalysisCardCompact } from '../components/comparador/ProductAnalysisCardCompact';
+// import { ProductAnalysisCardFinal } from '../components/comparador/ProductAnalysisCardFinal';
 import { ProductAnalysisCardWithBarChartRefactor } from '../components/comparador/ProductAnalysisCardWithBarChartRefactor';
 import { getBrandColor, getBrandHeaderStylesByPosition, getBrandColorByPosition } from '../utils/colorScheme';
 // Nuevos componentes avanzados
@@ -39,11 +38,7 @@ import {
   Sun,
   BarChart3,
   Info,
-  Layers,
-  Filter as FilterIcon,
   PieChart as PieChartIcon,
-  Database,
-  Zap,
   TrendingUp,
   AlertCircle
 } from 'lucide-react';
@@ -101,10 +96,10 @@ export const ComparadorPage: React.FC = () => {
     EXPORT_COLUMN_GROUPS.flatMap(g => g.columns.map(c => c.id))
   );
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null); // Estado para ordenamiento
-  const [tableSearchTerm, setTableSearchTerm] = useState(''); // Término de búsqueda para filtrar la tabla
-  const [searchResultsVisible, setSearchResultsVisible] = useState(false); // Control de visibilidad de resultados
+  const [tableSearchTerm] = useState(''); // Término de búsqueda para filtrar la tabla
+  const [searchResultsVisible] = useState(false); // Control de visibilidad de resultados
   const [selectedSearchResults, setSelectedSearchResults] = useState<Set<string>>(new Set()); // Estado para selección múltiple en búsqueda
-  const [activeSection, setActiveSection] = useState<string>(''); // Seguimiento de sección activa
+  const [activeSection] = useState<string>(''); // Seguimiento de sección activa
   const [highlightedBrand, setHighlightedBrand] = useState<string | null>(null); // MARCA RESALTADA PARA INTERACTIVIDAD
   const datosGeneralesRef = useRef<HTMLDivElement>(null); // Ref para el formulario de datos generales
   const pieChartRef = useRef<HTMLDivElement>(null); // Ref para el gráfico de torta
@@ -112,7 +107,7 @@ export const ComparadorPage: React.FC = () => {
   const exportWrapperRef = useRef<HTMLDivElement>(null); // Ref wrapper para exportar ambas secciones
   const comparisonTableRef = useRef<HTMLDivElement>(null); // Ref para la tabla de comparación
   const searchInputRef = useRef<HTMLInputElement>(null); // Ref para input de búsqueda
-  const tableRef = useRef<HTMLDivElement>(null); // Ref para tabla
+  // tableRef removed (unused)
   const searchResultsListRef = useRef<HTMLUListElement>(null); // Ref para lista de resultados virtualizada
 
 
@@ -340,7 +335,7 @@ export const ComparadorPage: React.FC = () => {
 
       return 0;
     });
-  }, [dataConPorcentajes, sortConfig]);
+  }, [dataConPorcentajes, sortConfig, tableSearchTerm]);
 
   // Cálculo de KPIs para el dashboard
   const dashboardKPIs = useMemo(() => {
@@ -619,9 +614,7 @@ export const ComparadorPage: React.FC = () => {
     }
   };
 
-  const handleOpenExportModal = () => {
-    setIsExportModalOpen(true);
-  };
+  // export modal trigger removed (unused)
 
   // Función para limpiar todo manualmente
   const handleClearAll = () => {
@@ -632,25 +625,8 @@ export const ComparadorPage: React.FC = () => {
   };
 
   // Función para determinar el estilo de las celdas de porcentaje (verde/rojo)
-  const getPercentageCellClass = useCallback((value: string | undefined, columnType: 'competitor' | 'sugerido'): string => {
-    if (value === undefined || value === null) return 'text-[var(--text-secondary)] font-semibold';
-    const parsed = parseFloat(value.replace('%', ''));
-    if (isNaN(parsed)) return 'text-[var(--text-secondary)] font-semibold';
-
-    const baseClasses = 'px-2 py-1 rounded-md font-bold text-xs inline-block';
-    if (parsed === 0) return 'text-[var(--text-primary)] font-semibold';
-
-    // Lógica para competidores: (Base / Comp) - 1. Negativo es bueno (más barato).
-    const isGoodForCompetitor = parsed < 0;
-    // Lógica para sugerido: (Sug / Base) - 1. Negativo es malo (estás por encima).
-    const isGoodForSugerido = parsed > 0;
-
-    const isGood = columnType === 'competitor' ? isGoodForCompetitor : isGoodForSugerido;
-
-    return isGood
-      ? `${baseClasses} bg-[var(--color-success)]/10 text-[var(--color-success)] border border-[var(--color-success)]/20`
-      : `${baseClasses} bg-[var(--color-danger)]/10 text-[var(--color-danger)] border border-[var(--color-danger)]/20`;
-  }, []);
+  // Percentage cell class helper removed (unused)
+  
 
   // Definición de columnas de la tabla (memorizada para rendimiento)
   //
@@ -674,7 +650,7 @@ export const ComparadorPage: React.FC = () => {
   // ajustan automáticamente mediante competidores.slice(1).
   const columns = useMemo((): IColumn<ComparisonTableRow>[] => {
     // Columnas dinámicas para cada competidor (Inputs de precio) con colores unificados
-    const dynamicCompetitorColumns: IColumn<ComparisonTableRow>[] = competidores.map((comp, index) => {
+    const dynamicCompetitorColumns: IColumn<ComparisonTableRow>[] = competidores.map((comp) => {
       const color = getBrandColorByPosition(comp, competidores);
       return {
         header: (
@@ -877,7 +853,7 @@ export const ComparadorPage: React.FC = () => {
         ),
       },
     ];
-  }, [competidores, handlePriceChange, eliminarProductoDeLista, handleBrandHover, highlightedBrand]);
+  }, [competidores, handlePriceChange, eliminarProductoDeLista, handleBrandHover, highlightedBrand, handleSort]);
 
   // Configuración de campos visibles en el formulario
   const fieldConfig: FieldConfig = { showRucDni: true, showCodigoCliente: true, showSucursal: true, showFecha: true, showMarcas: true };
@@ -1127,7 +1103,10 @@ export const ComparadorPage: React.FC = () => {
               <div className="flex flex-wrap gap-3" role="group" aria-label="Acciones de exportación">
                 {/* Botón de Exportar XLSX (ExcelJS - sin backend) */}
                 <ExcelJSExportButton 
-                  productos={dataConPorcentajes}
+                  productos={dataConPorcentajes.map(p => ({
+                    ...p,
+                    precios: p.precios ?? Object.fromEntries(competidores.map(m => [m, null]))
+                  }))}
                   marcas={competidores}
                   cliente={formState.precios.cliente || ''}
                   documento={formState.precios.documento_cliente}
