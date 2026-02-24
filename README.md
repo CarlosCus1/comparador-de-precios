@@ -1,0 +1,168 @@
+# CIPSA Análisis de Precios - Sistema de Comparación Competitiva
+
+Una aplicación web moderna y sofisticada para el análisis comparativo de precios entre múltiples competidores y cálculo de márgenes comerciales. Diseñada con un sistema de diseño premium, interfaz intuitiva y funcionalidades avanzadas para la toma de decisiones estratégicas en pricing.
+
+## ✨ Características Principales
+
+### 🔐 Autenticación y Seguridad
+- Login seguro con validación de dominio corporativo (@cipsa.com.pe)
+- Gestión de sesiones con timeout automático
+- Protección de rutas y datos sensibles
+
+### 📊 Análisis Comparativo Avanzado
+- **Catálogo Inteligente**: Carga automática desde backend con búsqueda en tiempo real
+- **Comparación Interactiva**: Tabla editable con cálculos automáticos de porcentajes y rankings
+- **Visualizaciones Dinámicas**: Gráficos de barras, pastel y tendencias con colores sincronizados
+- **Tarjetas Comparativas**: Layout horizontal responsive con métricas clave
+
+### 🎨 Sistema de Diseño Premium
+- **Paleta Corporativa**: Azul profundo como color principal con gradientes elegantes
+- **Colores Sincronizados**: Sistema unificado para marcas, gráficos y componentes
+- **Interfaz Moderna**: Diseño glassmorphism con efectos de sombra y animaciones sutiles
+- **Accesibilidad WCAG AA**: Contraste optimizado y navegación por teclado
+- **Responsive Design**: Adaptable a desktop, tablet y móvil
+
+### 📈 Exportación y Reportes
+- **Múltiples Formatos**: Excel, PDF y PNG con opciones avanzadas
+- **Reportes Personalizables**: Selección de columnas y métricas
+- **Visuales de Alta Calidad**: Gráficos exportables con branding consistente
+
+## 🛠️ Tecnologías
+
+### Frontend
+- **React 19** + **TypeScript** - Framework moderno con tipado fuerte
+- **Vite** - Build tool ultrarrápido con HMR
+- **Tailwind CSS** - Framework CSS utility-first con extensiones personalizadas
+- **Material-UI (MUI)** - Componentes avanzados con tema personalizado
+- **Recharts** - Librería de gráficos declarativa y flexible
+- **Zustand** - Gestión de estado ligera con persistencia
+- **React Hook Form** - Formularios con validación optimizada
+
+### Backend
+- **Python Flask** - API REST ligera y escalable
+- **Pandas** - Procesamiento de datos y generación de reportes
+- **OpenPyXL** - Manipulación de archivos Excel
+
+### DevOps & Calidad
+- **ESLint** + **Prettier** - Linting y formateo de código
+- **TypeScript** - Verificación de tipos estática
+- **Vitest** - Testing unitario y de integración
+
+## 🚀 Instalación y Configuración
+
+### Prerrequisitos
+- Node.js 18+
+- Python 3.8+
+- npm o yarn
+
+### Instalación Frontend
+```bash
+# Clonar repositorio
+git clone <repository-url>
+cd comparador_de_precios
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env
+# Editar VITE_BACKEND_URL según corresponda
+```
+
+### Instalación Backend
+```bash
+# Navegar al directorio backend
+cd backend
+
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Ejecutar servidor
+python app.py
+```
+
+### Ejecución en Desarrollo
+```bash
+# Terminal 1: Backend
+cd backend && python app.py
+
+# Terminal 2: Frontend
+npm run dev
+```
+
+## 🎯 Uso
+
+1. **Autenticación**: Inicia sesión con tu email corporativo
+2. **Búsqueda**: Utiliza la búsqueda inteligente para encontrar productos
+3. **Selección**: Agrega productos a la lista de comparación
+4. **Análisis**: Ingresa precios de competidores y visualiza métricas
+5. **Exportación**: Genera reportes en múltiples formatos
+
+## 🎨 Sistema de Diseño Detallado
+
+### Paleta de Colores
+- **Primario**: Azul profundo (#2563EB) con variantes 50-900
+- **Secundario**: Verde esmeralda (#059669)
+- **Accent**: Púrpura amatista (#7C3AED)
+- **Marcas**: Colores únicos asignados dinámicamente por nombre
+- **Estados**: Success (#10B981), Warning (#F59E0B), Danger (#DC2626)
+
+### Componentes UI
+- **Botones**: Gradientes corporativos con hover mejorado y animaciones
+- **Tarjetas**: Efectos glassmorphism con sombras dinámicas
+- **Formularios**: Campos con validación visual y estados interactivos
+- **Gráficos**: Colores sincronizados con paleta de marcas
+
+### Layout y Responsive
+- **Desktop**: Layout horizontal con sidebar y contenido principal
+- **Tablet/Móvil**: Diseño apilado con navegación colapsable
+- **Tarjetas Comparativas**: Horizontal en PC, vertical en móvil
+
+### Animaciones y Microinteracciones
+- **Transiciones**: Suaves con duración optimizada (200-300ms)
+- **Hover Effects**: Elevación y cambios de color sutiles
+- **Loading States**: Indicadores visuales durante operaciones asíncronas
+
+## 🏗️ Arquitectura
+
+```
+src/
+├── components/          # Componentes reutilizables
+│   ├── ui/             # Componentes base (Button, Modal, etc.)
+│   ├── charts/         # Gráficos y visualizaciones
+│   ├── comparador/     # Lógica de comparación
+│   └── ...
+├── pages/              # Páginas principales
+├── hooks/              # Hooks personalizados
+├── utils/              # Utilidades y helpers
+├── styles/             # CSS y temas
+└── types/              # Definiciones TypeScript
+```
+
+### Principios de Diseño
+- **Componentización**: Componentes modulares y reutilizables
+- **Separación de Concerns**: Lógica, presentación y datos separados
+- **Performance**: Lazy loading, memoización y optimizaciones
+- **Accesibilidad**: Cumplimiento WCAG AA con navegación por teclado
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -m 'Agrega nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
+
+### Guías de Desarrollo
+- Usa TypeScript para todo el código nuevo
+- Sigue las convenciones de nomenclatura existentes
+- Agrega tests para nuevas funcionalidades
+- Actualiza la documentación según corresponda
+
+## 📄 Licencia
+
+Este proyecto es propiedad de CIPSA. Todos los derechos reservados.
+
+## 📞 Soporte
+
+Para soporte técnico o consultas, contacta al equipo de desarrollo.
