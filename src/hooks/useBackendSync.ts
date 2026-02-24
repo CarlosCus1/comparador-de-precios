@@ -11,6 +11,10 @@ interface BackendStatus {
 }
 
 export const useBackendSync = (enableBackendSync = true) => {
+  // Detectar si estamos en GitHub Pages (sin backend disponible)
+  const isGitHubPages = !import.meta.env.VITE_BACKEND_URL;
+  const shouldSync = enableBackendSync && !isGitHubPages;
+
   const [backendStatus, setBackendStatus] = useState<BackendStatus>(() => {
     const cachedLastSync = sessionCache.get<number>('last_backend_check');
     return {
@@ -22,7 +26,7 @@ export const useBackendSync = (enableBackendSync = true) => {
   });
 
   const checkBackendStatus = useCallback(async () => {
-    if (!enableBackendSync) return;
+    if (!shouldSync) return;
 
     setBackendStatus(prev => ({ ...prev, isLoading: true, error: null }));
 
@@ -57,10 +61,10 @@ export const useBackendSync = (enableBackendSync = true) => {
         isLoading: false
       });
     }
-  }, [enableBackendSync]);
+  }, [shouldSync]);
 
   useEffect(() => {
-    if (enableBackendSync) {
+    if (shouldSync) {
       const lastCheck = sessionCache.get<number>('last_backend_check');
       const now = Date.now();
 
@@ -68,10 +72,10 @@ export const useBackendSync = (enableBackendSync = true) => {
         checkBackendStatus();
       }
     }
-  }, [checkBackendStatus, enableBackendSync]);
+  }, [checkBackendStatus, shouldSync]);
 
   const syncWithBackend = useCallback(async (timeConnected: number) => {
-    if (!enableBackendSync) return;
+    if (!shouldSync) return;
 
     const lastSync = sessionCache.get<number>('last_session_sync');
     const now = Date.now();
@@ -104,7 +108,7 @@ export const useBackendSync = (enableBackendSync = true) => {
     } catch (error) {
       console.error('❌ useBackendSync: Error en sincronización:', error);
     }
-  }, [enableBackendSync]);
+  }, [shouldSync]);
 
   return { backendStatus, checkBackendStatus, syncWithBackend };
 };
